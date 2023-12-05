@@ -23,7 +23,7 @@ class RecipeResource extends JsonResource
             'preparation_time' => $this->preparation_time,
             'recipe_portion' => $this->recipe_portion,
             'unit_portion' => $this->unit_portion,
-            'created_at' => $this->created_at->format('Y-m-d H:i:s'),
+            'created_at' => $this->created_at instanceof \DateTime ? $this->created_at->format('Y-m-d H:i:s') : $this->created_at,
             'advice' => $this->advice,
             'id_tag' => $this->id_tag,
             'id_user' => $this->id_user,

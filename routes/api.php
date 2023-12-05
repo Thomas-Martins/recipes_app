@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\DifficultyController;
 use App\Http\Controllers\Api\TagController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -31,4 +32,5 @@ Route::apiResource('recipes',RecipeController::class);
 Route::apiResource('/users', UserController::class);
 Route::apiResource('/ingredients', IngredientController::class);
 Route::apiResource('/tags', TagController::class);
+Route::apiResource('/difficulties', DifficultyController::class);
 //Route::get('test',[\App\Http\Controllers\Controller::class, 'test']);
