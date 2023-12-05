@@ -10,4 +10,5 @@ class Ingredient extends Model
     use HasFactory;
 
     protected $table = 'ingredients';
+    public $timestamps= false;
 }
