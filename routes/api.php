@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\TagController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\UserController;
@@ -29,4 +30,5 @@ Route::middleware('auth:sanctum')->group(function() {
 Route::apiResource('recipes',RecipeController::class);
 Route::apiResource('/users', UserController::class);
 Route::apiResource('/ingredients', IngredientController::class);
+Route::apiResource('/tags', TagController::class);
 //Route::get('test',[\App\Http\Controllers\Controller::class, 'test']);
