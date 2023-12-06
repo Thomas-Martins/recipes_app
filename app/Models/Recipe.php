@@ -5,6 +5,9 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
+/**
+ * @method static whereHas(string $string, \Closure $param)
+ */
 class Recipe extends Model
 {
     use HasFactory;
@@ -24,4 +27,10 @@ class Recipe extends Model
         'id_difficulty',
     ];
     public $timestamps= false;
+
+    public function tag(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    {
+        return $this->belongsTo(Tag::class, 'id_tag');
+    }
+
 }

@@ -27,10 +27,14 @@ Route::middleware('auth:sanctum')->group(function() {
 
 });
 //route public
-//Route::get('users',[UserController::class,'index']);
+Route::get('/recipes/{parentTagName}', [RecipeController::class, 'getRecipesByParentTagName']);
 Route::apiResource('recipes',RecipeController::class);
 Route::apiResource('/users', UserController::class);
 Route::apiResource('/ingredients', IngredientController::class);
 Route::apiResource('/tags', TagController::class);
 Route::apiResource('/difficulties', DifficultyController::class);
-//Route::get('test',[\App\Http\Controllers\Controller::class, 'test']);
+
+
+
+
+

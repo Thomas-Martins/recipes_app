@@ -7,6 +7,7 @@ use App\Http\Requests\StoreRecipeRequest;
 use App\Http\Requests\UpdateRecipeRequest;
 use App\Http\Resources\RecipeResource;
 use App\Models\Recipe;
+use App\Models\Tag;
 
 class RecipeController extends Controller
 {
@@ -26,10 +27,10 @@ class RecipeController extends Controller
     {
         $data = $request->validated();
         $recipe = Recipe::create($data);
-        if ($recipe){
+        if ($recipe) {
 //            return response(new RecipeResource($recipe), 201);
             return response()->json(['message' => 'Recette créée avec succès'], 201);
-        }else{
+        } else {
             return response()->json(['message' => 'Erreur lors de la création de la recette'], 500);
         }
 
@@ -51,9 +52,9 @@ class RecipeController extends Controller
         $data = $request->validated();
 //        return response()->json($data);
         $update = $recipe->update($data);
-        if($update){
-            return response()->json(['message'=>'Recette modifié avec succès']);
-        }else{
+        if ($update) {
+            return response()->json(['message' => 'Recette modifié avec succès']);
+        } else {
             return response()->json(['message' => 'Echec de la modification']);
         }
     }
@@ -64,6 +65,18 @@ class RecipeController extends Controller
     public function destroy(Recipe $recipe)
     {
         $recipe->delete();
-        return response('La recette a bien été supprimer!',201);
+        return response('La recette a bien été supprimer!', 201);
+    }
+
+
+    public function getRecipesByParentTagName($parentTagName): \Illuminate\Http\JsonResponse
+    {
+        $tag = Tag::where('tag_name', $parentTagName)->first();
+        if ($tag) {
+            $recipes = $tag->recipesByParentTag($parentTagName);
+            return response()->json(['recipes' => $recipes]);
+        } else {
+            return response()->json(['message' => 'Aucun tag parent trouvé pour ce nom']);
+        }
     }
 }
