@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\DifficultyController;
 use App\Http\Controllers\Api\TagController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -26,9 +27,14 @@ Route::middleware('auth:sanctum')->group(function() {
 
 });
 //route public
-//Route::get('users',[UserController::class,'index']);
+Route::get('/recipes/{parentTagName}', [RecipeController::class, 'getRecipesByParentTagName']);
 Route::apiResource('recipes',RecipeController::class);
 Route::apiResource('/users', UserController::class);
 Route::apiResource('/ingredients', IngredientController::class);
 Route::apiResource('/tags', TagController::class);
-//Route::get('test',[\App\Http\Controllers\Controller::class, 'test']);
+Route::apiResource('/difficulties', DifficultyController::class);
+
+
+
+
+
