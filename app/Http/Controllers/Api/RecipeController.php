@@ -67,16 +67,29 @@ class RecipeController extends Controller
         $recipe->delete();
         return response('La recette a bien été supprimer!', 201);
     }
-
-
+    
     public function getRecipesByParentTagName($parentTagName): \Illuminate\Http\JsonResponse
     {
         $tag = Tag::where('tag_name', $parentTagName)->first();
+
         if ($tag) {
-            $recipes = $tag->recipesByParentTag($parentTagName);
+            // Récupérer les recettes avec le tag parent
+            $recipesWithParentTag = $tag->recipesByParentTag($parentTagName);
+
+            // Récupérer les recettes avec le tag direct sans parent
+            $directTag = Tag::where('tag_name', $parentTagName)->whereNull('parent_tag_id')->first();
+            $recipesWithDirectTag = [];
+            if ($directTag) {
+                $recipesWithDirectTag = $directTag->recipes;
+            }
+
+            // Combiner les deux ensembles de recettes
+            $recipes = $recipesWithParentTag->merge($recipesWithDirectTag);
+
             return response()->json(['recipes' => $recipes]);
         } else {
             return response()->json(['message' => 'Aucun tag parent trouvé pour ce nom']);
         }
     }
+
 }

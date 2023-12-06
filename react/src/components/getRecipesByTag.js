@@ -18,7 +18,11 @@ const getRecipesByTag = (tag) => {
       return recipesData;
     })
     .catch((error) => {
-      throw error;
+      if (error.response && error.response.status === 429) {
+        throw new Error("Trop de requêtes, veuillez réessayer plus tard.");
+      } else {
+        throw error;
+      }
     });
 };
 

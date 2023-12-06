@@ -4,6 +4,7 @@ import getRecipesByTag from "../components/getRecipesByTag.js";
 export default function Entrees() {
   const [loading, setLoading] = useState(false);
   const [recipes, setRecipes] = useState([]);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     setLoading(true);
@@ -12,18 +13,21 @@ export default function Entrees() {
         setRecipes(recipesData);
         setLoading(false);
       })
-      .catch(() => {
+      .catch((error) => {
         setLoading(false);
         // Gérer les erreurs ici
+        setError(error);
       });
   }, []);
 
   return (
     <div>
       Recette avec le tag Entrées
-      {loading ?
+      {loading ? (
         <p>Loading...</p>
-        :
+      ) : error ? (
+        <p>Une erreur s'est produite : {error.message}</p>
+      ) : (
         <div>
           {recipes.map((recipe, key) => (
             <ul key={key}>
@@ -34,7 +38,7 @@ export default function Entrees() {
             </ul>
           ))}
         </div>
-      }
+      )}
     </div>
   )
 }
