@@ -33,4 +33,9 @@ class Recipe extends Model
         return $this->belongsTo(Tag::class, 'id_tag');
     }
 
+    public function image(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    {
+        return $this->belongsTo(Image::class, 'id_image');
+    }
+
 }

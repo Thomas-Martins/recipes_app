@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\DifficultyController;
+use App\Http\Controllers\Api\ImageController;
 use App\Http\Controllers\Api\TagController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -33,6 +34,8 @@ Route::apiResource('/users', UserController::class);
 Route::apiResource('/ingredients', IngredientController::class);
 Route::apiResource('/tags', TagController::class);
 Route::apiResource('/difficulties', DifficultyController::class);
+Route::post('/images',[ImageController::class,'ImageUpload']);
+//Route::apiResource('/images', ImageController::class);
 
 
 

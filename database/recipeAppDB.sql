@@ -24,7 +24,6 @@ create table if not exists images
     id int not null primary key auto_increment,
     url varchar(255) not null,
     image_path varchar(255) not null,
-    image_size int not null,
     created_at datetime not null default current_timestamp,
     updated_at datetime null default current_timestamp
 );
