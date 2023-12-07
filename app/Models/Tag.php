@@ -27,7 +27,7 @@ class Tag extends Model
             $query->where('parent_tag_id', function ($subQuery) use ($parentTagName) {
                 $subQuery->select('id')->from('tags')->where('tag_name', $parentTagName);
             });
-        })->get();
+        })->with('image')->get();
     }
 
 

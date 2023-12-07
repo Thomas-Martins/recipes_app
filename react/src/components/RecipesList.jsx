@@ -1,6 +1,7 @@
-import {Link} from "react-router-dom";
 import {useEffect, useState} from "react";
 import getRecipesByTag from "../methods/getRecipesByTag.js";
+import {json} from "react-router-dom";
+import Image from "./Image.jsx";
 export default function RecipesList({tag}) {
 
   const [loading, setLoading] = useState(false);
@@ -40,6 +41,9 @@ export default function RecipesList({tag}) {
                 <li>Tag: {recipe.tagName}</li>
                 <li>User: {recipe.userName}</li>
                 <li>Difficulty: {recipe.difficultyName}</li>
+                {recipe.image && (
+                    <Image imagePath={recipe.image.url} />
+                )}
               </ul>
             ))}
           </div>
