@@ -67,7 +67,7 @@ class RecipeController extends Controller
         $recipe->delete();
         return response('La recette a bien été supprimer!', 201);
     }
-    
+
     public function getRecipesByParentTagName($parentTagName): \Illuminate\Http\JsonResponse
     {
         $tag = Tag::where('tag_name', $parentTagName)->first();
