@@ -28,7 +28,7 @@ Route::middleware('auth:sanctum')->group(function() {
 });
 //route public
 Route::get('/recipes/{parentTagName}', [RecipeController::class, 'getRecipesByParentTagName']);
-Route::apiResource('recipes',RecipeController::class);
+Route::apiResource('/recipes',RecipeController::class);
 Route::apiResource('/users', UserController::class);
 Route::apiResource('/ingredients', IngredientController::class);
 Route::apiResource('/tags', TagController::class);

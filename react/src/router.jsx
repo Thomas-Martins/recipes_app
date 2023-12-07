@@ -1,33 +1,28 @@
 import {createBrowserRouter} from "react-router-dom";
-import Index from "./pages/Index.jsx";
-import Recipes from "./pages/Recipes.jsx";
+
+import RecipesList from "./components/RecipesList.jsx";
 import NotFound from "./pages/errorPages/NotFound.jsx";
-import Entrees from "./pages/Entrees.jsx";
-import Plats from "./pages/Plats.jsx";
-import Desserts from "./pages/Desserts.jsx";
+import App from "./App.jsx";
+
 
 const router = createBrowserRouter([
+
+  // Public routes
   {
     path: '/',
-    element: <Index/>
+    element: <App/>
   },
   {
-    path: '/recipes',
-    element: <Recipes/>,
-    children:[
-      {
-        path: '/recipes/entrees',
-        element: <Entrees/>
-      },
-      {
-        path: '/recipes/plats',
-        element: <Plats/>
-      },
-      {
-        path: '/recipes/desserts',
-        element: <Desserts/>
-      },
-    ]
+    path: '/recipes/entrees',
+    element: <RecipesList tag="entrees"/>
+  },
+  {
+    path: '/recipes/plats',
+    element: <RecipesList tag="plats"/>
+  },
+  {
+    path: '/recipes/desserts',
+    element: <RecipesList tag="desserts"/>
   },
   {
     path: '*',
