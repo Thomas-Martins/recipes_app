@@ -28,14 +28,16 @@ Route::middleware('auth:sanctum')->group(function() {
 
 });
 //route public
-Route::get('/recipes/{parentTagName}', [RecipeController::class, 'getRecipesByParentTagName']);
-Route::apiResource('/recipes',RecipeController::class);
-Route::apiResource('/users', UserController::class);
-Route::apiResource('/ingredients', IngredientController::class);
-Route::apiResource('/tags', TagController::class);
-Route::apiResource('/difficulties', DifficultyController::class);
-Route::post('/images',[ImageController::class,'ImageUpload']);
-//Route::apiResource('/images', ImageController::class);
+Route::group([], function () {
+    Route::get('/recipes/{parentTagName}', [RecipeController::class, 'getRecipesByParentTagName']);
+    Route::apiResource('/recipes', RecipeController::class);
+    // Les autres routes pour les utilisateurs, les ingrédients, les tags, les difficultés, etc.
+    Route::apiResource('/users', UserController::class);
+    Route::apiResource('/ingredients', IngredientController::class);
+    Route::apiResource('/tags', TagController::class);
+    Route::apiResource('/difficulties', DifficultyController::class);
+});
+
 
 
 

@@ -3,6 +3,7 @@ import {createBrowserRouter} from "react-router-dom";
 import RecipesList from "./components/RecipesList.jsx";
 import NotFound from "./pages/errorPages/NotFound.jsx";
 import App from "./App.jsx";
+import RecipeCreateForm from "./pages/RecipeCreateForm.jsx";
 
 
 const router = createBrowserRouter([
@@ -23,6 +24,10 @@ const router = createBrowserRouter([
   {
     path: '/recipes/desserts',
     element: <RecipesList tag="desserts"/>
+  },
+  {
+    path: '/recipes/create',
+    element: <RecipeCreateForm/>
   },
   {
     path: '*',

@@ -1,6 +1,6 @@
 import {useEffect, useState} from "react";
 import getRecipesByTag from "../methods/getRecipesByTag.js";
-import {json} from "react-router-dom";
+import {json, Link} from "react-router-dom";
 import Image from "./Image.jsx";
 export default function RecipesList({tag}) {
 
@@ -27,6 +27,7 @@ export default function RecipesList({tag}) {
       <div>
         <p>Page recettes avec le tag : "{tag}" mis en paramètre</p>
       </div>
+      <Link to="/recipes/create">Ajouter une recette</Link>
       <div>
         Recette avec le tag {tag}
         {loading ? (
