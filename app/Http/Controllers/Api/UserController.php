@@ -25,9 +25,8 @@ class UserController extends Controller
     public function store(StoreUserRequest $request)
     {
         $data = $request->validated();
-        // Encryptage du mot de passe avant de stocker en base de données
-        $data['password']=bcrypt($data['password']);
-        $user = new User($data);
+        $data['password'] = bcrypt($data['password']);
+        $user = User::create($data);
         return response(new UserResource($user), 201);
     }
 
@@ -50,6 +49,7 @@ class UserController extends Controller
             $data['password'] = bcrypt($data['password']);
         }
         $user->update($data);
+        return new UserResource($user);
     }
 
     /**

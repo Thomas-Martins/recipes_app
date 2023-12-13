@@ -1,9 +1,18 @@
 // Composant React pour le formulaire de création de recette
 import {useEffect, useState} from "react";
-import axios from "axios";
-import axiosClient from "../axiosClient.js";
+import axiosClient from "../methods/axiosClient.js";
+import {useStateContext} from "../contexts/ContextProvider.jsx";
+import {Navigate} from "react-router-dom";
 
-const RecipeForm = () => {
+const RecipeCreateForm = () => {
+
+  const {user, token} = useStateContext();
+
+  if(!token){
+    return <Navigate to="/login"/>
+  }
+
+
   const [formData, setFormData] = useState({
     recipe_name: "",
     description: "",
@@ -209,4 +218,4 @@ const RecipeForm = () => {
   );
 };
 
-export default RecipeForm;
+export default RecipeCreateForm;

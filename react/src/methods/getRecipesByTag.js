@@ -1,4 +1,4 @@
-import axiosClient from "../axiosClient.js";
+import axiosClient from "./axiosClient.js";
 
 const getRecipesByTag = (tag) => {
   return axiosClient.get(`/recipes/${tag}`)
