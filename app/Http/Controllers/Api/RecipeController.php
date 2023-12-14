@@ -17,7 +17,7 @@ class RecipeController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(): \Illuminate\Http\JsonResponse
     {
 //        $recipe = Recipe::all();
 //        return response()->json(['recipe' => $recipe]);
@@ -34,7 +34,7 @@ class RecipeController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreRecipeRequest $request)
+    public function store(StoreRecipeRequest $request): \Illuminate\Http\JsonResponse
     {
 //        $data = $request->validated();
 //        $recipe = Recipe::create($data);
@@ -85,7 +85,7 @@ class RecipeController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Recipe $recipe)
+    public function show(Recipe $recipe): RecipeResource
     {
         return new RecipeResource($recipe);
     }
@@ -93,7 +93,7 @@ class RecipeController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateRecipeRequest $request, Recipe $recipe)
+    public function update(UpdateRecipeRequest $request, Recipe $recipe): \Illuminate\Http\JsonResponse
     {
         $data = $request->validated();
 //        return response()->json($data);
@@ -108,11 +108,20 @@ class RecipeController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Recipe $recipe)
+    public function destroy(Recipe $recipe): \Illuminate\Foundation\Application|\Illuminate\Http\Response|\Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\Routing\ResponseFactory
     {
         $recipe->delete();
         return response('La recette a bien été supprimer!', 201);
     }
+
+    public function getUserRecipes(Request $request): \Illuminate\Http\JsonResponse
+    {
+        $user = $request->user();
+        $userRecipes = Recipe::where('id_user', $user->id)->get();
+
+        return response()->json($userRecipes);
+    }
+
 
     public function getRecipesByParentTagName($parentTagName): \Illuminate\Http\JsonResponse
     {

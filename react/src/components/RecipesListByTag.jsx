@@ -3,7 +3,7 @@ import getRecipesByTag from "../methods/getRecipesByTag.js";
 import {Link} from "react-router-dom";
 import Image from "./Image.jsx";
 
-export default function RecipesList({tag}) {
+export default function RecipesListByTag({tag}) {
 
   const [loading, setLoading] = useState(false);
   const [recipes, setRecipes] = useState([]);

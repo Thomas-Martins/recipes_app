@@ -1,10 +1,13 @@
 import {createBrowserRouter} from "react-router-dom";
-import RecipesList from "./components/RecipesList.jsx";
+import RecipesListByTag from "./components/RecipesListByTag.jsx";
 import NotFound from "./pages/errorPages/NotFound.jsx";
 import App from "./App.jsx";
 import RecipeCreateForm from "./pages/RecipeCreateForm.jsx";
 import Login from "./pages/authentication/Login.jsx";
 import Signup from "./pages/authentication/Signup.jsx";
+import Dashboard from "./pages/Dashboard.jsx";
+import Account from "./pages/Account.jsx";
+import UserRecipes from "./pages/UserRecipes.jsx";
 
 
 const router = createBrowserRouter([
@@ -16,15 +19,15 @@ const router = createBrowserRouter([
   },
   {
     path: '/recipes/entrees',
-    element: <RecipesList tag="entrees"/>
+    element: <RecipesListByTag tag="entrees"/>
   },
   {
     path: '/recipes/plats',
-    element: <RecipesList tag="plats"/>
+    element: <RecipesListByTag tag="plats"/>
   },
   {
     path: '/recipes/desserts',
-    element: <RecipesList tag="desserts"/>
+    element: <RecipesListByTag tag="desserts"/>
   },
   {
     path: '/recipes/create',
@@ -39,6 +42,25 @@ const router = createBrowserRouter([
     path: '/signup',
     element: <Signup/>
   },
+  //Authenticate Routes
+  {
+    path: '/user',
+    children: [
+      {
+        path:'/user/dashboard',
+        element: <Dashboard/>
+      },
+      {
+        path:'/user/account',
+        element: <Account/>,
+      },
+      {
+        path: '/user/recipes',
+        element: <UserRecipes/>
+      }
+    ]
+  },
+
   //Error route
   {
     path: '*',
