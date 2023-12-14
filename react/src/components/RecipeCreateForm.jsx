@@ -1,7 +1,7 @@
 // Composant React pour le formulaire de création de recette
 import {useEffect, useState} from "react";
-import axiosClient from "../../methods/axiosClient.js";
-import {useStateContext} from "../../contexts/ContextProvider.jsx";
+import axiosClient from "../methods/axiosClient.js";
+import {useStateContext} from "../contexts/ContextProvider.jsx";
 import {Navigate} from "react-router-dom";
 
 const RecipeCreateForm = () => {

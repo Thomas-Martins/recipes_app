@@ -1,7 +1,7 @@
 import {useEffect, useState} from "react";
-import getRecipesById from "../../methods/getRecipesById.js";
-import {Link, useParams} from "react-router-dom";
-import Image from "../../components/Image.jsx";
+import getRecipesById from "../methods/getRecipesById.js";
+import {useParams} from "react-router-dom";
+import Image from "./Image.jsx";
 
 export default function RecipeDetails() {
   const {id} = useParams();
@@ -13,7 +13,6 @@ export default function RecipeDetails() {
     setLoading(true);
     getRecipesById(`${id}`)
       .then((recipeData) => {
-        console.log(recipeData)
         setRecipesDetails(recipeData);
         setLoading(false);
       })
@@ -23,6 +22,8 @@ export default function RecipeDetails() {
         setError(error);
       });
   }, []);
+
+  console.log(recipeDetails)
   return (
     <div>
       <div>
@@ -43,9 +44,20 @@ export default function RecipeDetails() {
             <div>
               <p>Pour : {recipeDetails.recipe_portion + " " + recipeDetails.unit_portion}</p>
             </div>
-            <div>
-              <p>Liste des Ingrédients: </p>
-            </div>
+            {recipeDetails.ingredients && recipeDetails.ingredients.length > 0 ? (
+              <div>
+                <p>Liste des Ingrédients:</p>
+                <ul>
+                  {recipeDetails.ingredients.map((ingredient, index) => (
+                    <li key={index}>
+                      {ingredient.ingredient_name} - {ingredient.quantity + " " +ingredient.unit}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ) : (
+              <p>Aucun ingrédient disponible</p>
+            )}
           </div>
         )}
       </div>

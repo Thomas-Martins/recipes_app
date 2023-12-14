@@ -2,14 +2,14 @@ import {createBrowserRouter} from "react-router-dom";
 import RecipesListByTag from "./components/RecipesListByTag.jsx";
 import NotFound from "./pages/errorPages/NotFound.jsx";
 import App from "./App.jsx";
-import RecipeCreateForm from "./pages/recipe/RecipeCreateForm.jsx";
+import RecipeCreateForm from "./components/RecipeCreateForm.jsx";
 import Login from "./pages/authentication/Login.jsx";
 import Signup from "./pages/authentication/Signup.jsx";
 import Dashboard from "./pages/Dashboard.jsx";
 import Account from "./pages/Account.jsx";
 import UserRecipes from "./pages/UserRecipes.jsx";
-import RecipeDetailForm from "./pages/recipe/RecipeDetailForm.jsx";
-import RecipeDetails from "./pages/recipe/RecipeDetails.jsx";
+import RecipeDetailForm from "./components/RecipeDetailForm.jsx";
+import RecipeDetails from "./components/RecipeDetails.jsx";
 
 
 const router = createBrowserRouter([

@@ -1,5 +1,5 @@
 import {useEffect, useState} from "react";
-import axiosClient from "../../methods/axiosClient.js";
+import axiosClient from "../methods/axiosClient.js";
 
 export default function RecipeDetailForm(recipeId) {
   const [recipesDetails, setRecipeDetails] = useState([]);

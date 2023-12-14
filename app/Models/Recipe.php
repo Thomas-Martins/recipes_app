@@ -38,4 +38,8 @@ class Recipe extends Model
         return $this->belongsTo(Image::class, 'id_image');
     }
 
+    public function ingredients(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
+    {
+        return $this->belongsToMany(Ingredient::class, 'recipeHasIngredient', 'id_recipe', 'id_ingredient');
+    }
 }

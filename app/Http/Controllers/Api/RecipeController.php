@@ -88,7 +88,9 @@ class RecipeController extends Controller
     public function show($id): \Illuminate\Http\JsonResponse
     {
         // Récupérer la recette par son ID
-        $recipe = Recipe::find($id);
+        $recipe = Recipe::with(['ingredients' => function ($query) {
+            $query->select('ingredients.*', 'recipeHasIngredient.*');
+        }])->find($id);
 
         if (!$recipe) {
             return response()->json(['message' => 'Recette introuvable'], 404);
