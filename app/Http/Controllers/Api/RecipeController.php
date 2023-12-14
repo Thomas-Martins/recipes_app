@@ -85,9 +85,16 @@ class RecipeController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Recipe $recipe): RecipeResource
+    public function show($id): \Illuminate\Http\JsonResponse
     {
-        return new RecipeResource($recipe);
+        // Récupérer la recette par son ID
+        $recipe = Recipe::find($id);
+
+        if (!$recipe) {
+            return response()->json(['message' => 'Recette introuvable'], 404);
+        }
+
+        return response()->json($recipe);
     }
 
     /**
@@ -97,6 +104,18 @@ class RecipeController extends Controller
     {
         $data = $request->validated();
 //        return response()->json($data);
+
+        //Vérifie si une nouvelle image est envoyé dans la requête
+        if($request->hasFile('image')){
+            //Traitement de la nouvelle image
+            $imageUploadResponse = $this->uploadImage($request);
+            if($imageUploadResponse->getStatusCode() === 202){
+                $imageId = $imageUploadResponse->getData()->image_id;
+                $data['id_image'] = $imageId;
+            }else{
+                return response()->json(['message' => 'Erreur lors du téléchargement de l\'image'], 500);
+            }
+        }
         $update = $recipe->update($data);
         if ($update) {
             return response()->json(['message' => 'Recette modifié avec succès']);

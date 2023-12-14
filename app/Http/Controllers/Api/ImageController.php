@@ -31,9 +31,15 @@ class ImageController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Image $image)
+    public function show($id)
     {
-        //
+        $image = Image::find($id);
+
+        if (!$image) {
+            return response()->json(['message' => 'Image introuvable'], 404);
+        }
+
+        return response()->json($image);
     }
 
     /**

@@ -46,6 +46,7 @@ export default function RecipesListByTag({tag}) {
                 {recipe.image && (
                   <Image imagePath={recipe.image.url}/>
                 )}
+                <Link to={`/recipe/${recipe.id}`}>Voir la recette</Link>
               </ul>
             ))}
           </div>

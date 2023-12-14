@@ -27,6 +27,7 @@ Route::middleware('auth:sanctum')->group(function() {
     });
     Route::put('/user/{user}',[UserController::class,'update']);
     Route::get('/user/recipes', [RecipeController::class,'getUserRecipes']);
+//    Route::put('/recipes/{recipe}', [RecipeController::class, 'update']);
     Route::post('/logout',[AuthController::class, 'logout']);
 });
 //route public
@@ -34,10 +35,12 @@ Route::group([], function () {
     Route::get('/recipes/{parentTagName}', [RecipeController::class, 'getRecipesByParentTagName']);
     Route::apiResource('/recipes', RecipeController::class);
     // Les autres routes pour les utilisateurs, les ingrédients, les tags, les difficultés, etc.
-//    Route::apiResource('/users', UserController::class);
-    Route::apiResource('/ingredients', IngredientController::class);
+    Route::apiResource('/users', UserController::class);
+//    Route::apiResource('/ingredients', IngredientController::class);
     Route::apiResource('/tags', TagController::class);
     Route::apiResource('/difficulties', DifficultyController::class);
     Route::post('/signup', [AuthController::class, 'signup']);
     Route::post('/login', [AuthController::class, 'login']);
+    Route::get('/recipe/{id}', [RecipeController::class,'show']);
+    Route::apiResource('/images',ImageController::class);
 });

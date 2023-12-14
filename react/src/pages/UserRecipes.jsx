@@ -1,5 +1,6 @@
 import {useEffect, useState} from "react";
 import axiosClient from "../methods/axiosClient.js";
+import {Link} from "react-router-dom";
 
 export default function UserRecipes() {
 
@@ -8,7 +9,6 @@ export default function UserRecipes() {
   useEffect(() => {
     axiosClient.get('/user/recipes')
       .then(({data}) => {
-        console.log(data)
         setRecipesInfo(data);
       })
       .catch((error) => {
@@ -24,6 +24,8 @@ export default function UserRecipes() {
           <li key={recipe.id}>
             <h3>{recipe.recipe_name}</h3>
             <p>Description : {recipe.description}</p>
+            <Link to={`/recipe/${recipe.id}`}>Voir la recette</Link>
+            <Link to="/recipe/modifications">Modifier la recette</Link>
           </li>
         ))}
       </ul>
