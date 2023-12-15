@@ -1,7 +1,7 @@
 import {useState, useEffect} from "react";
 import axiosClient from "../methods/axiosClient.js";
 
-export default function Account() {
+export default function UserInfoForm() {
   const [userInfo, setUserInfo] = useState(null);
 
   useEffect(() => {

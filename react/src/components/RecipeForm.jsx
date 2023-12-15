@@ -1,22 +1,17 @@
-// Composant React pour le formulaire de création de recette
 import {useEffect, useState} from "react";
-import axiosClient from "../methods/axiosClient.js";
 import {useStateContext} from "../contexts/ContextProvider.jsx";
-import {Navigate} from "react-router-dom";
+import axiosClient from "../methods/axiosClient.js";
+import {Navigate, useParams} from "react-router-dom";
+import Image from "./Image.jsx";
+import {getDataForInput, getDataForRecipes} from "../methods/recipeHelpers.js";
 
-const RecipeCreateForm = () => {
-
-  const {user, token} = useStateContext();
-
-  if(!token){
-    return <Navigate to="/login"/>
-  }
-
-
+const RecipeForm = () => {
+  const {id} = useParams(); // Récupère l'ID de la recette dans l'URL si disponible
+  const {token} = useStateContext(); //Récupère le token
+  const isUpdate = !!id; // Vérifie si on est en train de mettre à jour une recette existante
   const [formData, setFormData] = useState({
     recipe_name: "",
     description: "",
-    image: null,
     cooking_time: 0,
     break_time: 0,
     preparation_time: 0,
@@ -26,39 +21,83 @@ const RecipeCreateForm = () => {
     id_tag: 0,
     id_user: 0,
     id_difficulty: 0,
+    id_image: 0,
   });
-
   const [tags, setTags] = useState([]);
   const [users, setUser] = useState([]);
   const [difficulties, setDifficulties] = useState([]);
   const [errors, setErrors] = useState([]);
+  const [imageId, setImageId] = useState([]);
+  if (!token) {
+    return <Navigate to="/login"/>
+  }
 
   useEffect(() => {
-    // Récupérer les tags depuis le backend
-    axiosClient.get("/tags")
-      .then((response) => {
-        setTags(response.data.tag);
-      })
-      .catch((error) => {
-        console.error("Erreur lors de la récupération des tags :", error);
-      });
-    // Récupérer les difficultés depuis le backend
-    axiosClient.get("/difficulties")
-      .then((response) => {
-        setDifficulties(response.data.difficulty);
-      })
-      .catch((error) => {
-        console.error("Erreur lors de la récupération des difficultés :", error);
-      });
-    // Récupérer les utilisateurs
-    axiosClient.get("/users")
-      .then((response) => {
-        setUser(response.data.users);
-      })
-      .catch((error) => {
-        console.error("Erreur lors de la récupération des difficultés :", error);
-      });
-  }, []);
+    getDataForRecipes(setTags, setDifficulties, setUser);
+    // Si on est en mode modification, charge les détails de la recette à modifier
+    if (isUpdate) {
+      getDataForInput(id, setFormData);
+      // On récupère l'id de l'image que l'on modifie
+      axiosClient.get(`/recipe/${id}`)
+        .then(({data}) => {
+          setImageId(data.id_image)
+        })
+        .catch((error) => {
+          console.log(error)
+        })
+    }
+  }, [setTags, setDifficulties, setUser, isUpdate, id, setFormData]);
+
+
+  const handleSubmitRecipe = async (e) => {
+    e.preventDefault();
+    const {
+      recipe_name,
+      description,
+      cooking_time,
+      break_time,
+      preparation_time,
+      recipe_portion,
+      unit_portion,
+      advice,
+      id_tag,
+      id_user,
+      id_difficulty,
+    } = formData;
+
+    const recipeData = new FormData();
+    recipeData.append('recipe_name', recipe_name);
+    recipeData.append("description", description);
+    recipeData.append("cooking_time", cooking_time);
+    recipeData.append("break_time", break_time);
+    recipeData.append("preparation_time", preparation_time);
+    recipeData.append("recipe_portion", recipe_portion);
+    recipeData.append("unit_portion", unit_portion);
+    recipeData.append("advice", advice);
+    recipeData.append("id_tag", id_tag);
+    recipeData.append("id_difficulty", id_difficulty);
+    recipeData.append("id_user", id_user);
+
+    try {
+      let response;
+      if (isUpdate) {
+        response = await axiosClient.put(`/recipe/${id}`, recipeData, { headers: { 'Content-Type': 'application/json' } });
+
+        // Vérifier s'il y a une nouvelle image et la mettre à jour si nécessaire
+        if (formData.image && formData.image.newImage) {
+          await uploadNewImage();
+        }
+      } else {
+        response = await axiosClient.post("/recipes", recipeData);
+      }
+      console.log(response)
+      // Recharge la page si la requête est réussie
+      window.location.reload();
+    } catch (error) {
+      console.error(error);
+      setErrors(error);
+    }
+  };
 
   const handleInputChange = (e) => {
     const {name, value} = e.target;
@@ -75,70 +114,53 @@ const RecipeCreateForm = () => {
     ) {
       parsedValue = parseInt(value);
     }
-
     setFormData({...formData, [name]: parsedValue});
+    console.log(formData)
   };
 
   const handleFileChange = (e) => {
-    setFormData({...formData, image: e.target.files[0]});
+    const newImage = e.target.files[0];
+
+    // Mise à jour de l'image dans formData sans téléchargement immédiat
+    setFormData({ ...formData, image: { newImage } });
   };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    const {
-      recipe_name,
-      description,
-      image,
-      cooking_time,
-      break_time,
-      preparation_time,
-      recipe_portion,
-      unit_portion,
-      advice,
-      id_tag,
-      id_difficulty,
-      id_user
-    } = formData;
-
-    const recipeData = new FormData();
-    recipeData.append("recipe_name", recipe_name);
-    recipeData.append("description", description);
-    recipeData.append("image", image);
-    recipeData.append("cooking_time", cooking_time);
-    recipeData.append("break_time", break_time);
-    recipeData.append("preparation_time", preparation_time);
-    recipeData.append("recipe_portion", recipe_portion);
-    recipeData.append("unit_portion", unit_portion);
-    recipeData.append("advice", advice);
-    recipeData.append("id_tag", id_tag);
-    recipeData.append("id_difficulty", id_difficulty);
-    recipeData.append("id_user", id_user);
-
+  // Fonction pour télécharger la nouvelle image
+  const uploadNewImage = async () => {
     try {
-      const response = await axiosClient.post('/recipes', recipeData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      });
-      console.log(response.data);
-      // Réinitialiser le formulaire ou rediriger l'utilisateur après la création de la recette
+      if (formData.image && formData.image.newImage) {
+        console.log(formData)
+        const imageFormData = new FormData();
+        imageFormData.append('image', formData.image.newImage);
+        imageFormData.append('_method', 'PUT');
+        console.log(formData);
+        const response = await axiosClient.post(`/images/${imageId}`, imageFormData);
+        const { url, image_path } = response.data;
+
+        // Mettre à jour formData avec les détails de la nouvelle image
+        setFormData({
+          ...formData,
+          image: {
+            url,
+            image_path,
+          },
+        });
+      }
     } catch (error) {
-      // Gérer les erreurs d'envoi du formulaire
       console.error(error);
-      setErrors(error);
     }
   };
 
+
   return (
     <div>
-      {errors &&
+      {Array.isArray(errors) && errors.length > 0 && (
         <div>
           {errors.map((error, key) => (
             <p key={key}>{error.message}</p>
           ))}
         </div>
-      }
-      <form onSubmit={handleSubmit}>
+      )}
+      <form onSubmit={handleSubmitRecipe}>
         <input
           type="text"
           name="recipe_name"
@@ -153,6 +175,11 @@ const RecipeCreateForm = () => {
           placeholder="Ajouter une description"
         />
         <div>
+          {formData.image && formData.image.url && (
+            <div>
+              <Image imagePath={formData.image.url}/>
+            </div>
+          )}
           <label htmlFor="image">Photo de la recette</label>
           <input type="file" name="image" onChange={handleFileChange}/>
         </div>
@@ -177,7 +204,8 @@ const RecipeCreateForm = () => {
         </div>
         <div>
           <label htmlFor="advice">Conseils :</label>
-          <textarea name="advice" onChange={handleInputChange} value={formData.advice} placeholder="Facultatif..."/>
+          <textarea name="advice" onChange={handleInputChange} value={formData.advice || ""}
+                    placeholder="Facultatif..."/>
         </div>
         <div>
           <label htmlFor="id_tag">Choisir un tag :</label>
@@ -212,10 +240,10 @@ const RecipeCreateForm = () => {
             ))}
           </select>
         </div>
-        <button type="submit">Create Recipe</button>
+        <button type="submit">{isUpdate ? 'Update Recipe' : 'Create Recipe'}</button>
       </form>
     </div>
   );
 };
 
-export default RecipeCreateForm;
+export default RecipeForm;

@@ -25,7 +25,7 @@ export default function UserRecipes() {
             <h3>{recipe.recipe_name}</h3>
             <p>Description : {recipe.description}</p>
             <Link to={`/recipe/${recipe.id}`}>Voir la recette</Link>
-            <Link to="/recipe/modifications">Modifier la recette</Link>
+            <Link to={`/recipe/modifications/${recipe.id}`}>Modifier la recette</Link>
           </li>
         ))}
       </ul>

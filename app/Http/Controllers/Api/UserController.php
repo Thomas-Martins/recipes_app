@@ -50,6 +50,8 @@ class UserController extends Controller
             'last_name' => 'string|max:50',
         ]);
 
+        var_dump($validatedData);
+
         $user->update($validatedData);
 
         return response()->json(['message' => 'Utilisateur mis à jour avec succès', 'user' => $user]);

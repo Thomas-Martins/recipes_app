@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreRecipeRequest;
 use App\Http\Requests\UpdateRecipeRequest;
+use App\Http\Requests\UpdateUserRequest;
 use App\Http\Resources\RecipeResource;
 use App\Models\Image;
 use App\Models\Recipe;
@@ -36,29 +37,6 @@ class RecipeController extends Controller
      */
     public function store(StoreRecipeRequest $request): \Illuminate\Http\JsonResponse
     {
-//        $data = $request->validated();
-//        $recipe = Recipe::create($data);
-//        if ($recipe) {
-////            return response(new RecipeResource($recipe), 201);
-//            return response()->json(['message' => 'Recette créée avec succès'], 201);
-//        } else {
-//            return response()->json(['message' => 'Erreur lors de la création de la recette'], 500);
-//        }
-
-//        // Récupérer les données de la recette depuis le formulaire
-//        $recipeData = $request->validated(); // Ajoutez d'autres champs ici
-//
-//        // Enregistrer la recette dans la base de données
-//        $recipe = Recipe::create($recipeData);
-//
-//        // Récupérer l'ID de l'image envoyée
-//        $imageId = $request->input('image_id');
-//
-//        // Associer l'ID de l'image à la recette
-//        $recipe->id_image = $imageId;
-//        $recipe->save();
-//
-//        return response()->json(['message' => 'Recipe created successfully'], 200);
 
         // Récupérer les données de la recette depuis le formulaire
         $recipeData = $request->validated(); // Ajoutez d'autres champs ici
@@ -88,7 +66,7 @@ class RecipeController extends Controller
     public function show($id): \Illuminate\Http\JsonResponse
     {
         // Récupérer la recette par son ID
-        $recipe = Recipe::with(['ingredients' => function ($query) {
+        $recipe = Recipe::with(['image', 'ingredients' => function ($query) {
             $query->select('ingredients.*', 'recipeHasIngredient.*');
         }])->find($id);
 
@@ -102,29 +80,16 @@ class RecipeController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateRecipeRequest $request, Recipe $recipe): \Illuminate\Http\JsonResponse
+    public function update(UpdateRecipeRequest $request, $id): \Illuminate\Http\JsonResponse
     {
-        $data = $request->validated();
-//        return response()->json($data);
+        $updatedData = $request->validated();
 
-        //Vérifie si une nouvelle image est envoyé dans la requête
-        if($request->hasFile('image')){
-            //Traitement de la nouvelle image
-            $imageUploadResponse = $this->uploadImage($request);
-            if($imageUploadResponse->getStatusCode() === 202){
-                $imageId = $imageUploadResponse->getData()->image_id;
-                $data['id_image'] = $imageId;
-            }else{
-                return response()->json(['message' => 'Erreur lors du téléchargement de l\'image'], 500);
-            }
-        }
-        $update = $recipe->update($data);
-        if ($update) {
-            return response()->json(['message' => 'Recette modifié avec succès']);
-        } else {
-            return response()->json(['message' => 'Echec de la modification']);
-        }
+        $recipe = Recipe::findOrFail($id);
+        $recipe->update($updatedData);
+        // Retourner une réponse
+        return response()->json(['message' => 'Mise à jour réussie', 'data' => $recipe]);
     }
+
 
     /**
      * Remove the specified resource from storage.
@@ -200,6 +165,4 @@ class RecipeController extends Controller
 
         return response()->json(['image_id' => $image->id], 200);
     }
-
-
 }

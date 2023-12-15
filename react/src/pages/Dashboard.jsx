@@ -4,15 +4,7 @@ import {useEffect} from "react";
 import axiosClient from "../methods/axiosClient.js";
 
 export default function Dashboard() {
-  const {token, user} = useStateContext()
-
-  // useEffect(() => {
-  //   axiosClient.get('/user')
-  //     .then(({data}) => {
-  //       console.log(data)
-  //     })
-  //     .catch(() => {})
-  // }, []);
+  const {token} = useStateContext()
 
   if (!token) {
     return <Navigate to="/login"/>
