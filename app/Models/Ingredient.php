@@ -11,4 +11,9 @@ class Ingredient extends Model
 
     protected $table = 'ingredients';
     public $timestamps= false;
+
+    public function recipes(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
+    {
+        return $this->belongsToMany(Recipe::class, 'recipeHasIngredient', 'id_ingredient', 'id_recipe');
+    }
 }

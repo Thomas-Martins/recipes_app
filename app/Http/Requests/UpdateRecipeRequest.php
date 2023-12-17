@@ -24,14 +24,13 @@ class UpdateRecipeRequest extends FormRequest
         return [
             'recipe_name'=>'string',
             'description' => 'string',
-            'cooking_time' => 'integer|min:0',
-            'break_time' => 'integer|min:0',
-            'preparation_time' => 'integer|min:0',
-            'recipe_portion' => 'integer|min:1',
+            'cooking_time' => 'integer',
+            'break_time' => 'integer',
+            'preparation_time' => 'integer',
+            'recipe_portion' => 'integer',
             'unit_portion' => 'string',
-            'id_tag' => 'integer|exists:tags,id',
-            'id_user' => 'integer|exists:users,id',
-            'id_difficulty' => 'integer|exists:difficulties,id',
+            'id_difficulty' => 'integer',
+            'advice' => 'string',
         ];
     }
 }

@@ -16,7 +16,7 @@ class UserController extends Controller
     public function index()
     {
         $users = User::all();
-        return response()->json(['users'=> $users]);
+        return response()->json(['users' => $users]);
     }
 
     /**
@@ -43,13 +43,18 @@ class UserController extends Controller
      */
     public function update(UpdateUserRequest $request, User $user)
     {
-        $data = $request->validated();
-        //Encryptage du mot de passe
-        if(isset($data['password'])){
-            $data['password'] = bcrypt($data['password']);
-        }
-        $user->update($data);
-        return new UserResource($user);
+//        return response('Methods Update');
+
+        $validatedData = $request->validate([
+            'username' => 'string',
+            'email' => 'email',
+            'first_name' => 'string|max:50',
+            'last_name' => 'string|max:50',
+        ]);
+
+        $user->update($validatedData);
+
+        return response()->json(['message' => 'Utilisateur mis à jour avec succès', 'user' => $user]);
     }
 
     /**
@@ -58,6 +63,6 @@ class UserController extends Controller
     public function destroy(User $user)
     {
         $user->delete();
-        return response("L'utilisateur à bien été supprimé",204);
+        return response("L'utilisateur à bien été supprimé", 200);
     }
 }

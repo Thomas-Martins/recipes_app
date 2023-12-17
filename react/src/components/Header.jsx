@@ -4,7 +4,7 @@ import {useEffect} from "react";
 
 export default function Header() {
 
-  const {token,user, setUser, setToken} = useStateContext();
+  const {token, user, setUser, setToken} = useStateContext();
 
   const onLogout = (ev) => {
     ev.preventDefault();
@@ -16,7 +16,7 @@ export default function Header() {
   }
 
   useEffect(() => {
-    if(token){
+    if (token) {
       axiosClient.get('/user')
         .then(({data}) => {
           setUser(data)
@@ -32,17 +32,20 @@ export default function Header() {
         <a href='/recipes/entrees'>Entrées </a>
         <a href='/recipes/plats'>Plats </a>
         <a href='/recipes/desserts'>Desserts </a>
-      </div>
-      <div>
         {token ?
           <div>
-            <p>Utilisateur connecté : {user.username}</p>
+            <div>
+              <p>Utilisateur connecté : {user.username}</p>
+              <a href="/user/dashboard">Mon Compte</a>
+            </div>
             <button onClick={onLogout}>Déconnexion</button>
           </div>
           :
           <a href="/login">Connexion</a>
         }
+
       </div>
+
     </div>
   )
 }

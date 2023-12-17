@@ -23,7 +23,11 @@ class AuthController extends Controller
             'last_name' => $data['last_name'],
         ]);
         $token = $user->createToken('main')->plainTextToken;
-        return response(compact('user', 'token'));
+        return response([
+            'user' => $user,
+            'user_id' => $user->id, // Ajoute l'ID de l'utilisateur à la réponse
+            'token' => $token,
+        ]);
     }
 
     public function login(LoginRequest $request): \Illuminate\Foundation\Application|\Illuminate\Http\Response|\Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\Routing\ResponseFactory
@@ -38,8 +42,12 @@ class AuthController extends Controller
         /** @var User $user */
         $user = Auth::user();
         $token = $user->createToken('main')->plainTextToken;
-        return response(compact('user', 'token'));
 
+        return response([
+            'user' => $user,
+            'user_id' => $user->id, // Ajoute l'ID de l'utilisateur à la réponse
+            'token' => $token,
+        ]);
     }
 
     public function logout(Request $request): \Illuminate\Foundation\Application|\Illuminate\Http\Response|\Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\Routing\ResponseFactory

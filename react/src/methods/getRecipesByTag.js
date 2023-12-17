@@ -3,10 +3,9 @@ import axiosClient from "./axiosClient.js";
 const getRecipesByTag = (tag) => {
   return axiosClient.get(`/recipes/${tag}`)
     .then(async ({ data }) => {
-      console.log(data)
       const recipesData = await Promise.all(data.recipes.map(async (recipe) => {
         const tag = await axiosClient.get(`/tags/${recipe.id_tag}`);
-        const user = await axiosClient.get(`/users/${recipe.id_user}`);
+        const user = await axiosClient.get(`/user/${recipe.id_user}`);
         const difficulty = await axiosClient.get(`/difficulties/${recipe.id_difficulty}`);
         return {
           ...recipe,

@@ -11,7 +11,7 @@ class UpdateUserRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -21,8 +21,17 @@ class UpdateUserRequest extends FormRequest
      */
     public function rules(): array
     {
-        return [
-            //
+        $rules =  [
+            'username' => 'string',
+            'email' => 'email',
+            'first_name' => 'string|max:50',
+            'last_name' => 'string|max:50',
         ];
+
+//        if ($this->has('password')) {
+//            $rules['password'] = 'string|min:6';
+//        }
+
+        return $rules;
     }
 }

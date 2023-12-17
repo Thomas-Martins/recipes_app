@@ -28,6 +28,7 @@ class RecipeResource extends JsonResource
             'id_tag' => $this->id_tag,
             'id_user' => $this->id_user,
             'id_difficulty' => $this->id_difficulty,
+            'id_image' => $this->id_image,
         ];
     }
 }
