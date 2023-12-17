@@ -2,7 +2,7 @@ import {createBrowserRouter} from "react-router-dom";
 import RecipesListByTag from "./components/RecipesListByTag.jsx";
 import NotFound from "./pages/errorPages/NotFound.jsx";
 import App from "./App.jsx";
-import RecipeForm from "./components/RecipeForm.jsx";
+import RecipeCreateForm from "./components/RecipeCreateForm.jsx";
 import Login from "./pages/authentication/Login.jsx";
 import Signup from "./pages/authentication/Signup.jsx";
 import Dashboard from "./pages/Dashboard.jsx";
@@ -33,7 +33,7 @@ const router = createBrowserRouter([
   },
   {
     path: '/recipes/create',
-    element: <RecipeForm/>
+    element: <RecipeCreateForm/>
   },
   //Authentication routes
   {

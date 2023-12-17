@@ -43,14 +43,14 @@ class UserController extends Controller
      */
     public function update(UpdateUserRequest $request, User $user)
     {
+//        return response('Methods Update');
+
         $validatedData = $request->validate([
             'username' => 'string',
             'email' => 'email',
             'first_name' => 'string|max:50',
             'last_name' => 'string|max:50',
         ]);
-
-        var_dump($validatedData);
 
         $user->update($validatedData);
 
@@ -63,6 +63,6 @@ class UserController extends Controller
     public function destroy(User $user)
     {
         $user->delete();
-        return response("L'utilisateur à bien été supprimé", 204);
+        return response("L'utilisateur à bien été supprimé", 200);
     }
 }

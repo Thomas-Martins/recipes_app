@@ -1,14 +1,6 @@
 import axiosClient from "../methods/axiosClient.js";
 
-export const getDataForRecipes = (setTags, setDifficulties, setUser) => {
-  axiosClient.get("/tags")
-    .then((response) => {
-      setTags(response.data.tag);
-    })
-    .catch((error) => {
-      console.error("Erreur lors de la récupération des tags :", error);
-    });
-
+export const getDifficulties = (setDifficulties) => {
   axiosClient.get("/difficulties")
     .then((response) => {
       setDifficulties(response.data.difficulty);
@@ -16,7 +8,17 @@ export const getDataForRecipes = (setTags, setDifficulties, setUser) => {
     .catch((error) => {
       console.error("Erreur lors de la récupération des difficultés :", error);
     });
-
+};
+export const getTags = (setTags) => {
+  axiosClient.get("/tags")
+    .then((response) => {
+      setTags(response.data.tag);
+    })
+    .catch((error) => {
+      console.error("Erreur lors de la récupération des tags :", error);
+    });
+};
+export const getUsers = (setUser) => {
   axiosClient.get("/users")
     .then((response) => {
       setUser(response.data.users);
@@ -41,7 +43,8 @@ export const getDataForInput = (id, setFormData) => {
         advice,
         id_tag,
         id_difficulty,
-        id_user
+        id_user,
+        id_image,
       } = response.data;
 
       setFormData({
@@ -56,7 +59,8 @@ export const getDataForInput = (id, setFormData) => {
         advice,
         id_tag,
         id_difficulty,
-        id_user
+        id_user,
+        id_image
       });
     })
     .catch((error) => {

@@ -11,7 +11,7 @@ class StoreUserRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -22,7 +22,17 @@ class StoreUserRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'username' => 'required|string|max:50',
+            'email' => 'required|email',
+            'password' => [
+                'required',
+//                'confirmed',
+//                Password::min(8)
+//                ->letters()
+//                ->symbols()
+            ],
+            'first_name' => 'required|string|max:50',
+            'last_name' => 'required|string|max:50',
         ];
     }
 }

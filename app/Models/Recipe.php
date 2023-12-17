@@ -15,6 +15,7 @@ class Recipe extends Model
     protected $table = 'recipes';
 
     protected $fillable = [
+        'id',
         'recipe_name',
         'description',
         'cooking_time',
@@ -22,9 +23,11 @@ class Recipe extends Model
         'preparation_time',
         'recipe_portion',
         'unit_portion',
+        'advice',
         'id_tag',
         'id_user',
         'id_difficulty',
+        'id_image'
     ];
     public $timestamps= false;
 

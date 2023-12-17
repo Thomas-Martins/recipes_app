@@ -28,9 +28,9 @@ class UpdateUserRequest extends FormRequest
             'last_name' => 'string|max:50',
         ];
 
-        if ($this->has('password')) {
-            $rules['password'] = 'required|string|min:6';
-        }
+//        if ($this->has('password')) {
+//            $rules['password'] = 'string|min:6';
+//        }
 
         return $rules;
     }

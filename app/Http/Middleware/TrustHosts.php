@@ -9,7 +9,6 @@ class TrustHosts extends Middleware
     protected $middleware = [
         // ...
         \App\Http\Middleware\TrustHosts::class,
-        \App\Http\Middleware\CorsMiddleware::class,
     ];
 
     /**

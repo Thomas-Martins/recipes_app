@@ -1,7 +1,7 @@
 import {useEffect, useState} from "react";
 import {useParams} from "react-router-dom";
 import axiosClient from "../methods/axiosClient.js";
-import RecipeForm from "./RecipeForm.jsx";
+import RecipeUpdateForm from "./RecipeUpdateForm.jsx";
 
 export default function RecipeDetailForm(recipeId) {
   const {id} = useParams();
@@ -18,23 +18,11 @@ export default function RecipeDetailForm(recipeId) {
       });
   },[id])
 
-  // const onUpdate = (ev) => {
-  //   ev.preventDefault();
-  // }
-  //
-  // const handleUpdate = (ev) => {
-  //   ev.preventDefault();
-  // }
-  //
-  // const updatedRecipeInfo = () => {
-  //
-  // }
-
   return (
     <div>
       <h1>Formulaire de modification de la recette</h1>
       {recipeInfo &&
-        <RecipeForm/>
+        <RecipeUpdateForm/>
       }
     </div>
   )

@@ -1,4 +1,5 @@
 <?php
+
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\AuthController;
@@ -21,32 +22,42 @@ use \App\Http\Controllers\Api\IngredientController;
 */
 
 Route::middleware('auth:sanctum')->group(function () {
+    //ROUTE FOR USERS METHODS
     Route::get('/user', function (Request $request) {
         return $request->user();
     });
-    Route::put('/user/{user}', [UserController::class, 'update']);
     Route::get('/user/recipes', [RecipeController::class, 'getUserRecipes']);
+    Route::get('/users', [UserController::class, 'index']);
+    Route::get('/user/{user}', [UserController::class, 'show']);
+    Route::post('/users', [UserController::class, 'store']);
+    Route::put('/user/{user}', [UserController::class, 'update']);
+    Route::delete('/user/{user}', [UserController::class, 'destroy']);
+
+
+    //ROUTE FOR RECIPE METHODS
+    Route::post('/recipes/', [RecipeController::class, 'store']);
+    Route::put('/recipe/{recipe}', [RecipeController::class, 'update']);
+    Route::delete('/recipe/{recipe}', [RecipeController::class, 'destroy']);
+
+    // LOGOUT
     Route::post('/logout', [AuthController::class, 'logout']);
-    Route::put('/recipe/{id}', [RecipeController::class, 'update']);
-
 });
-//route public
-Route::put('/images/{id}', [ImageController::class, 'update']);
+
+//Authentication
+Route::post('/signup', [AuthController::class, 'signup']);
+Route::post('/login', [AuthController::class, 'login']);
+
+//Public Routes
+Route::apiResource('/tags', TagController::class);
+Route::apiResource('/ingredients', IngredientController::class);
+Route::apiResource('/difficulties', DifficultyController::class);
+Route::apiResource('/images', ImageController::class);
+
+//Public Routes for Recipes
 Route::group([], function () {
-
-    Route::get('/recipes/{parentTagName}', [RecipeController::class, 'getRecipesByParentTagName']);
-    Route::post('/recipes', [RecipeController::class, 'store']);
-    Route::get('/recipe/{id}', [RecipeController::class, 'show']);
-    // Les autres routes pour les utilisateurs, les ingrédients, les tags, les difficultés, etc.
-    Route::apiResource('/users', UserController::class);
-    Route::apiResource('/ingredients', IngredientController::class);
-    Route::apiResource('/tags', TagController::class);
-    Route::apiResource('/difficulties', DifficultyController::class);
-    Route::apiResource('/images', ImageController::class);
-//    Route::post('/images', [ImageController::class, 'store']);
-
-
-    Route::post('/signup', [AuthController::class, 'signup']);
-    Route::post('/login', [AuthController::class, 'login']);
-
+    //CRUD
+    Route::get('/recipes', [RecipeController::class, 'index']);
+    Route::get('/recipe/{recipe}', [RecipeController::class, 'show']);
+    //Other Routes
+    Route::get('/recipes/{parentTag}', [RecipeController::class, 'getRecipesByParentTag']);
 });

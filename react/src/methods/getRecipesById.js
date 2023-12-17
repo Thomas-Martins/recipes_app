@@ -3,7 +3,7 @@ import axiosClient from "./axiosClient.js";
 const getRecipesById = (id) => {
   return axiosClient.get(`/recipe/${id}`)
     .then(async ({data}) => {
-      const user = await axiosClient.get(`/users/${data.id_user}`)
+      const user = await axiosClient.get(`/user/${data.id_user}`)
       const tag = await axiosClient.get(`/tags/${data.id_tag}`);
       const difficulty = await axiosClient.get(`/difficulties/${data.id_difficulty}`);
       let imageUrl = null;

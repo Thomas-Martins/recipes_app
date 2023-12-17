@@ -29,10 +29,8 @@ class UpdateRecipeRequest extends FormRequest
             'preparation_time' => 'integer',
             'recipe_portion' => 'integer',
             'unit_portion' => 'string',
-            'id_tag' => 'integer',
-            'id_user' => 'integer',
             'id_difficulty' => 'integer',
-//            'image' => 'image|mimes:jpeg,png,jpg,gif,svg'
+            'advice' => 'string',
         ];
     }
 }
