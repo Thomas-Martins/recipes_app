@@ -9,6 +9,7 @@ use App\Http\Requests\UpdateUserRequest;
 use App\Http\Resources\RecipeResource;
 use App\Models\Image;
 use App\Models\Recipe;
+use App\Models\RecipeHasIngredient;
 use App\Models\Tag;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Http\Request;
@@ -39,14 +40,11 @@ class RecipeController extends Controller
         // Récupérer les données de la recette depuis le formulaire
         $recipeData = $request->validated(); // Ajoutez d'autres champs ici
 
-        //Enregistrer l'image et récupérer l'ID de l'image
+        // Enregistrer l'image et récupérer l'ID de l'image
         $imageUploadResponse = $this->uploadImage($request);
-
-//        return response()->json(['message' => 'Recipe created successfully', 'recipe' => $recipeData], 200);
 
         if ($imageUploadResponse->getStatusCode() === 200) {
             $imageId = $imageUploadResponse->getData()->image_id;
-
 
             // Enregistrer la recette dans la base de données
             $recipe = Recipe::create($recipeData);
@@ -54,6 +52,19 @@ class RecipeController extends Controller
             // Associer l'ID de l'image à la recette
             $recipe->id_image = $imageId;
             $recipe->save();
+
+            // Récupérer les données des ingrédients envoyées depuis le formulaire
+            $ingredients = $request->get('ingredients', []);
+
+            // Associer les ingrédients à la recette dans recipeHasIngredients
+            foreach ($ingredients as $ingredient) {
+                RecipeHasIngredient::create([
+                    'id_recipe' => $recipe->id,
+                    'id_ingredient' => $ingredient['ingredientId'],
+                    'quantity' => $ingredient['quantity'],
+                    'unit' => $ingredient['unit'],
+                ]);
+            }
 
             return response()->json(['message' => 'Recipe created successfully', 'recipe' => $recipe], 200);
         } else {
@@ -83,22 +94,66 @@ class RecipeController extends Controller
      */
     public function update(UpdateRecipeRequest $request, $id): \Illuminate\Http\JsonResponse
     {
-        // On valide les données de la requête puis on les stocke
+        // Valider les données de la requête
         $updatedData = $request->validated();
 
-        // On sélectionne la recette à modifier grâce à l'id
+        // Sélectionner la recette à modifier
         $recipe = Recipe::findOrFail($id);
 
-        //On mets à jour la recette avec les nouvelles données
-        $updatedData = $recipe->update($updatedData);
+        // Mettre à jour les champs de la recette
+//        var_dump('$updatedData',$updatedData);
+        $recipe->update($updatedData);
 
-        // Boucle pour gérer si la maj échoue
-        if ($updatedData) {
-            return response()->json(['message' => 'La recette à bien été mis à jour', 'Updated Recipe' => $recipe], 200);
-        } else {
-            return response()->json(['message' => 'Échec lors de la mise à jour'], 500);
+
+        // Récupérer les données des ingrédients envoyées depuis le formulaire
+        $updatedIngredients = $request->get('ingredients', []);
+
+//        var_dump('$updatedIngredients',$updatedIngredients);
+
+        // Récupérer les ingrédients actuels de la recette
+        $currentIngredients = $recipe->ingredients()->pluck('id_ingredient')->toArray();
+
+        // Récupérer les identifiants des ingrédients dans $updatedIngredients
+        $updatedIngredientIds = array_column($updatedIngredients, 'id');
+
+        // Ajouts : Trouver les nouveaux ingrédients ajoutés
+        foreach ($updatedIngredients as $ingredient) {
+            $ingredientId = $ingredient['id'];
+            // Si l'ingrédient n'est pas dans les ingrédients actuels, l'ajouter
+            if (!in_array($ingredientId, $currentIngredients)) {
+                RecipeHasIngredient::create([
+                    'id_recipe' => $recipe->id,
+                    'id_ingredient' => $ingredientId,
+                    'quantity' => $ingredient['quantity'],
+                    'unit' => $ingredient['unit'],
+                ]);
+            }
         }
 
+        // Suppressions : Trouver les anciens ingrédients retirés
+        foreach ($currentIngredients as $ingredientId) {
+            // Si l'ingrédient actuel n'est pas dans les ingrédients mis à jour, le supprimer
+            if (!in_array($ingredientId, array_column($updatedIngredients, 'id'))) {
+                RecipeHasIngredient::where('id_recipe', $recipe->id)
+                    ->where('id_ingredient', $ingredientId)
+                    ->delete();
+            }
+        }
+
+        // Mise à jour des entrées existantes pour les ingrédients restants
+        foreach ($updatedIngredients as $ingredient) {
+            $ingredientId = $ingredient['id']; // Récupérer l'identifiant de l'ingrédient
+            // Si l'ingrédient existe toujours, mettre à jour la quantité et l'unité
+            if (in_array($ingredientId, $currentIngredients)) {
+                RecipeHasIngredient::where('id_recipe', $recipe->id)
+                    ->where('id_ingredient', $ingredientId)
+                    ->update([
+                        'quantity' => $ingredient['quantity'],
+                        'unit' => $ingredient['unit'],
+                    ]);
+            }
+        }
+        return response()->json(['message' => 'Recette mise à jour avec succès', 'Updated Recipe' => $recipe], 200);
     }
 
     /**

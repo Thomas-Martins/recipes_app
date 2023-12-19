@@ -6,6 +6,11 @@ import axiosClient from "../methods/axiosClient.js";
 
 const RecipeCreateForm = () => {
   const {token} = useStateContext();
+  const [tags, setTags] = useState([]);
+  const [difficulties, setDifficulties] = useState([]);
+  const [errors, setErrors] = useState([]);
+  const [ingredientList, setIngredientList] = useState([]);
+  const [ingredientsFromAPI, setIngredientsFromAPI] = useState([]);
   const [formData, setFormData] = useState({
     id: 0,
     recipe_name: "",
@@ -20,11 +25,8 @@ const RecipeCreateForm = () => {
     id_user: 0,
     id_difficulty: 0,
     image: null,
+    ingredients: [],
   });
-  const [tags, setTags] = useState([]);
-  // const [userId, setUserId] = useState([]);
-  const [difficulties, setDifficulties] = useState([]);
-  const [errors, setErrors] = useState([]);
 
 
   // Vérification du token
@@ -34,6 +36,15 @@ const RecipeCreateForm = () => {
 
   // Récupère les listes de tags, utilisateurs, difficultés
   useEffect(() => {
+    //Récupère la liste des ingrédients depuis l'api
+    axiosClient.get('ingredients')
+      .then(response => {
+        setIngredientsFromAPI(response.data.ingredient); // Mettre à jour la liste des ingrédients
+      })
+      .catch(error => {
+        console.error('Error fetching ingredients:', error);
+      });
+    //Récupère la liste des difficultés et des tags depuis l'api
     getDifficulties(setDifficulties);
     getTags(setTags);
     getIdCurrentUser();
@@ -57,10 +68,36 @@ const RecipeCreateForm = () => {
     setFormData({...formData, [name]: parsedValue});
   };
 
+
+  const handleIngredientInputChange = (ingredientId, quantity, unit, isChecked) => {
+    let updatedIngredients = [...ingredientList]; // Faire une copie de la liste existante
+
+    const existingIngredientIndex = updatedIngredients.findIndex(item => item.ingredientId === ingredientId);
+
+    if (isChecked && existingIngredientIndex !== -1) {
+      // Si l'ingrédient est déjà présent, mettre à jour la quantité et l'unité
+      updatedIngredients[existingIngredientIndex] = { ingredientId, quantity, unit };
+    } else if (isChecked && existingIngredientIndex === -1) {
+      // Sinon, ajouter l'ingrédient avec la quantité et l'unité
+      updatedIngredients.push({ ingredientId, quantity, unit });
+    } else {
+      // Si l'ingrédient est décoché, le retirer de la liste
+      updatedIngredients = updatedIngredients.filter(item => item.ingredientId !== ingredientId);
+    }
+
+    // Mettre à jour à la fois ingredientList et le champ 'ingredients' dans formData
+    setIngredientList(updatedIngredients);
+    setFormData({ ...formData, ingredients: updatedIngredients });
+  };
+
+  // };
+
   const handleSubmitRecipe = async (e) => {
     e.preventDefault();
     try {
       const formDataToSend = new FormData();
+
+      //Infos de la recettes
       formDataToSend.append('recipe_name', formData.recipe_name);
       formDataToSend.append('description', formData.description);
       formDataToSend.append("cooking_time", formData.cooking_time);
@@ -74,7 +111,13 @@ const RecipeCreateForm = () => {
       formDataToSend.append("id_user", formData.id_user);
       formDataToSend.append("image", formData.image);
 
-      const response = await axiosClient.post("/recipes", formData,{
+      // Ajoutez les ingrédients à formDataToSend
+      formDataToSend.append(
+        "ingredients",
+        JSON.stringify(ingredientList) // Envoyez la liste des ingrédients avec quantités et unités
+      );
+
+      const response = await axiosClient.post("/recipes", formData, {
         headers: {
           'Content-Type': 'multipart/form-data'
         },
@@ -181,6 +224,58 @@ const RecipeCreateForm = () => {
               </option>
             ))}
           </select>
+        </div>
+        <div>
+          {/* Affichage des ingrédients depuis l'API */}
+          {ingredientsFromAPI.map(ingredient => (
+            <div key={ingredient.id}>
+              <label>
+                <input
+                  type="checkbox"
+                  onChange={(e) => {
+                    const isChecked = e.target.checked;
+                    const quantity = isChecked ? 0 : '';
+                    const unit = isChecked ? '' : '';
+                    handleIngredientInputChange(ingredient.id, quantity, unit, isChecked);
+                  }}
+                />
+                {ingredient.ingredient_name}
+              </label>
+              {/* Champs de saisie pour la quantité et l'unité (affichés si l'ingrédient est sélectionné) */}
+              {ingredientList.some(item => item.ingredientId === ingredient.id) && (
+                <>
+                  <input
+                    type="number"
+                    placeholder="Quantité"
+                    onChange={(e) => {
+                      const updatedIngredients = ingredientList.map(item => {
+                        if (item.ingredientId === ingredient.id) {
+                          return { ...item, quantity: e.target.value };
+                        }
+                        return item;
+                      });
+                      setIngredientList(updatedIngredients);
+                      setFormData({ ...formData, ingredients: updatedIngredients });
+                    }}
+                  />
+                  <input
+                    type="text"
+                    placeholder="Unité"
+                    onChange={(e) => {
+                      const updatedIngredients = ingredientList.map(item => {
+                        if (item.ingredientId === ingredient.id) {
+                          return { ...item, unit: e.target.value };
+                        }
+                        return item;
+                      });
+                      setIngredientList(updatedIngredients);
+                      setFormData({ ...formData, ingredients: updatedIngredients });
+                    }}
+                  />
+                </>
+              )}
+            </div>
+          ))}
         </div>
         <button type="submit">Créer la recette</button>
       </form>

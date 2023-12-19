@@ -29,7 +29,6 @@ class StoreRecipeRequest extends FormRequest
             'preparation_time' => 'required|integer',
             'recipe_portion' => 'required|integer',
             'unit_portion' => 'required|string',
-            'advice' => 'string',
             'id_tag' => 'required|integer',
             'id_user' => 'required|integer',
             'id_difficulty' => 'required|integer',

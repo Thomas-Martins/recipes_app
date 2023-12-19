@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\RecipeHasIngredientsController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\AuthController;
@@ -61,3 +62,5 @@ Route::group([], function () {
     //Other Routes
     Route::get('/recipes/{parentTag}', [RecipeController::class, 'getRecipesByParentTag']);
 });
+
+Route::apiResource('/recipes_ingredients', RecipeHasIngredientsController::class);
