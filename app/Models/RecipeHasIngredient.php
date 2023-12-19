@@ -8,8 +8,8 @@ use Illuminate\Database\Eloquent\Model;
 class RecipeHasIngredient extends Model
 {
     use HasFactory;
-    protected $table = 'recipeHasIngredients';
-    protected $fillable = ['id_recipe', 'id_ingredient'];
+    protected $table = 'recipeHasIngredient';
+    protected $fillable = ['id','id_recipe', 'id_ingredient', 'quantity', 'unit'];
 
     public function ingredient(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {

@@ -82,6 +82,8 @@ create table if not exists recipeHasIngredient
     unit          varchar(50) not null,
     id_ingredient int         null,
     id_recipe     int         null,
+    created_at datetime     not null default current_timestamp,
+    updated_at datetime     null     default current_timestamp,
     constraint recipeHasIngredient___fk_ingredient foreign key (id_ingredient) references ingredients (id),
     constraint recipeHasIngredient___fk_recipe foreign key (id_recipe) references recipes (id)
 );
