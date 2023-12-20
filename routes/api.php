@@ -27,16 +27,12 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/user', function (Request $request) {
         return $request->user();
     });
-    Route::get('/user/recipes', [RecipeController::class, 'getUserRecipes']);
     Route::get('/users', [UserController::class, 'index']);
-    Route::get('/user/{user}', [UserController::class, 'show']);
     Route::post('/users', [UserController::class, 'store']);
     Route::put('/user/{user}', [UserController::class, 'update']);
     Route::delete('/user/{user}', [UserController::class, 'destroy']);
 
-
     //ROUTE FOR RECIPE METHODS
-    Route::post('/recipes/', [RecipeController::class, 'store']);
     Route::put('/recipe/{recipe}', [RecipeController::class, 'update']);
     Route::delete('/recipe/{recipe}', [RecipeController::class, 'destroy']);
 
@@ -53,6 +49,7 @@ Route::apiResource('/tags', TagController::class);
 Route::apiResource('/ingredients', IngredientController::class);
 Route::apiResource('/difficulties', DifficultyController::class);
 Route::apiResource('/images', ImageController::class);
+Route::get('/user/{user}', [UserController::class, 'show']);
 
 //Public Routes for Recipes
 Route::group([], function () {
@@ -64,3 +61,4 @@ Route::group([], function () {
 });
 
 Route::apiResource('/recipes_ingredients', RecipeHasIngredientsController::class);
+Route::post('/recipes/', [RecipeController::class, 'store']);

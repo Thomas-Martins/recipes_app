@@ -83,34 +83,6 @@ const RecipeUpdateForm = () => {
 
   }, [setDifficulties, id, setFormData]);
 
-  // Fonction pour gérer le changement de sélection d'ingrédients
-  // const handleIngredientSelection = (ingredientId, isChecked) => {
-  //   setSelectedIngredients((prevIngredients) => ({
-  //     ...prevIngredients,
-  //     [ingredientId]: isChecked,
-  //   }));
-  //
-  //   const updatedIngredientList = ingredientList.map((ingredient) => {
-  //     if (ingredient.id_ingredient === parseInt(ingredientId)) {
-  //       return {
-  //         ...ingredient,
-  //         selected: isChecked,
-  //       };
-  //     }
-  //     return ingredient;
-  //   });
-  //
-  //   setIngredientList(updatedIngredientList); // Mettre à jour la liste des ingrédients sélectionnés dans le state
-  //
-  //   // Mettre à jour formData.ingredients en fonction de la sélection/désélection de l'ingrédient
-  //   const updatedFormData = {
-  //     ...formData,
-  //     ingredients: updatedIngredientList,
-  //   };
-  //
-  //   setFormData(updatedFormData); // Mettre à jour formData avec la liste d'ingrédients mise à jour
-  // };
-
   //Fonction de soumission du formulaire
   const handleUpdateSubmitRecipe = async (ev) => {
     ev.preventDefault();
@@ -166,7 +138,6 @@ const RecipeUpdateForm = () => {
       console.error(error);
       setErrors(error);
     }
-
   }
 
   const handleInputChange = (ev) => {

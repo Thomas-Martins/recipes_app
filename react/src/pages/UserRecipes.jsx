@@ -11,6 +11,7 @@ export default function UserRecipes() {
     setErrors(null)
     axiosClient.get('/user/recipes')
       .then(({data}) => {
+        console.log(data)
         setRecipesInfo(data);
       })
       .catch((error) => {
@@ -21,7 +22,7 @@ export default function UserRecipes() {
   const onDelete = (id) => {
     axiosClient.delete(`/recipe/${id}`)
       .then(() => {
-      window.location.reload();
+      // window.location.reload();
       })
       .catch((error) => {
         setErrors(error)
