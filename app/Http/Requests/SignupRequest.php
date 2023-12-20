@@ -27,10 +27,10 @@ class SignupRequest extends FormRequest
             'email' => 'required|email',
             'password' => [
                 'required',
-//                'confirmed',
-//                Password::min(8)
-//                ->letters()
-//                ->symbols()
+                'confirmed',
+                Password::min(8)
+                ->letters()
+                ->symbols()
             ],
             'first_name' => 'required|string|max:50',
             'last_name' => 'required|string|max:50',
