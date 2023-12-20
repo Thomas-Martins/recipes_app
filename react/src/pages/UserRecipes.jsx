@@ -22,7 +22,7 @@ export default function UserRecipes() {
   const onDelete = (id) => {
     axiosClient.delete(`/recipe/${id}`)
       .then(() => {
-      // window.location.reload();
+      window.location.reload();
       })
       .catch((error) => {
         setErrors(error)
